@@ -1,0 +1,6 @@
+{
+  "name": "iCareCode",
+  "description": "A dark-themed, minimalist landing page for iCareCode web development agency, featuring custom animated portfolio cards and services.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
