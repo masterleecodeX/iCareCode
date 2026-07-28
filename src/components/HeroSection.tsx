@@ -18,6 +18,14 @@ export function HeroSection() {
     setPositions(prev => [prev[1], prev[2], prev[0]]);
   };
 
+  const handleDragEnd = (_event: any, info: any) => {
+    if (info.offset.x > 50) {
+      handleLeftClick();
+    } else if (info.offset.x < -50) {
+      handleRightClick();
+    }
+  };
+
   const getPosition = (imageIndex: number) => positions.indexOf(imageIndex);
 
   return (
@@ -79,6 +87,10 @@ export function HeroSection() {
             <motion.div 
               key={index}
               className="absolute top-0 bottom-0 w-full bg-[#F7F5F0] rounded-[16px] md:rounded-[28px] overflow-hidden shadow-2xl cursor-pointer"
+              drag={pos === 1 ? "x" : false}
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.2}
+              onDragEnd={handleDragEnd}
               initial={false}
               animate={{
                 x,
@@ -104,6 +116,7 @@ export function HeroSection() {
               <motion.img 
                 src={src}
                 alt={`Hero ${index}`} 
+                draggable={false}
                 className="absolute inset-0 w-full h-full object-cover"
                 initial={false}
                 animate={{
