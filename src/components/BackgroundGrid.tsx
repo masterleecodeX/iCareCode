@@ -1,6 +1,29 @@
 import { useEffect, useRef } from "react";
 
-const CHARS = ["I", "C", "A", "R", "E", "O", "d", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "<", ">", "{", "}", "/"];
+const CHARS = [
+  "I",
+  "C",
+  "A",
+  "R",
+  "E",
+  "O",
+  "d",
+  "0",
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "<",
+  ">",
+  "{",
+  "}",
+  "/",
+];
 
 interface Cell {
   baseX: number;
@@ -23,7 +46,7 @@ export function BackgroundGrid() {
     let clientY = -1000;
     let mouseX = -1000;
     let mouseY = -1000;
-    
+
     let targetSpotlightOpacity = 0;
     let currentSpotlightOpacity = 0;
     let lastTouchTime = 0;
@@ -47,19 +70,19 @@ export function BackgroundGrid() {
         targetSpotlightOpacity = 1;
       }
     };
-    
+
     const handleTouchEnd = () => {
       lastTouchTime = Date.now();
       targetSpotlightOpacity = 0;
     };
-    
+
     const handleScroll = () => {
       if (clientX !== -1000 && clientY !== -1000) {
         mouseX = clientX + window.scrollX;
         mouseY = clientY + window.scrollY;
       }
     };
-    
+
     const handleMouseLeave = () => {
       targetSpotlightOpacity = 0;
     };
@@ -71,10 +94,10 @@ export function BackgroundGrid() {
     window.addEventListener("touchcancel", handleTouchEnd);
     window.addEventListener("scroll", handleScroll);
     document.addEventListener("mouseleave", handleMouseLeave);
-    
+
     const CELL_SIZE = 24;
     let cells: Cell[] = [];
-    
+
     const initCells = (w: number, h: number) => {
       cells = [];
       const cols = Math.ceil(w / CELL_SIZE);
@@ -86,12 +109,12 @@ export function BackgroundGrid() {
             baseY: y * CELL_SIZE,
             x: x * CELL_SIZE,
             y: y * CELL_SIZE,
-            char: CHARS[Math.floor(Math.random() * CHARS.length)]
+            char: CHARS[Math.floor(Math.random() * CHARS.length)],
           });
         }
       }
     };
-    
+
     const handleResize = () => {
       const w = document.documentElement.clientWidth;
       const h = document.documentElement.scrollHeight;
@@ -114,7 +137,8 @@ export function BackgroundGrid() {
 
     const draw = () => {
       time += 0.05;
-      currentSpotlightOpacity += (targetSpotlightOpacity - currentSpotlightOpacity) * 0.05;
+      currentSpotlightOpacity +=
+        (targetSpotlightOpacity - currentSpotlightOpacity) * 0.05;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.font = "12px monospace";
@@ -123,19 +147,20 @@ export function BackgroundGrid() {
 
       for (let i = 0; i < cells.length; i++) {
         const cell = cells[i];
-        
+
         const dx = mouseX - cell.baseX;
         const dy = mouseY - cell.baseY;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        
+
         const maxDist = 180;
-        
+
         let targetX = cell.baseX;
         let targetY = cell.baseY;
-        
+
         // Repel from mouse
         if (dist < maxDist && dist > 0 && currentSpotlightOpacity > 0.01) {
-          const force = Math.pow((maxDist - dist) / maxDist, 2) * currentSpotlightOpacity; // non-linear force
+          const force =
+            Math.pow((maxDist - dist) / maxDist, 2) * currentSpotlightOpacity; // non-linear force
           const pushX = (dx / dist) * force * 30;
           const pushY = (dy / dist) * force * 30;
           targetX -= pushX;
@@ -148,20 +173,24 @@ export function BackgroundGrid() {
 
         // Randomly change characters sometimes
         if (Math.random() < 0.001) {
-            cell.char = CHARS[Math.floor(Math.random() * CHARS.length)];
+          cell.char = CHARS[Math.floor(Math.random() * CHARS.length)];
         }
 
         // Calculate opacity and color
         let opacity = 0.03; // Base very dim opacity for the whole grid
         if (dist < maxDist) {
-           opacity = Math.max(0.03, 0.6 * (1 - dist / maxDist) * currentSpotlightOpacity);
+          opacity = Math.max(
+            0.03,
+            0.6 * (1 - dist / maxDist) * currentSpotlightOpacity,
+          );
         }
 
         // Draw with blue tech color
         ctx.fillStyle = `rgba(54, 116, 181, ${opacity})`;
-        
+
         // Add a slight sine wave floating effect to baseY if not near mouse
-        const floatY = (dist > maxDist) ? Math.sin(time + cell.baseX * 0.01) * 1 : 0;
+        const floatY =
+          dist > maxDist ? Math.sin(time + cell.baseX * 0.01) * 1 : 0;
 
         ctx.fillText(cell.char, cell.x, cell.y + floatY);
       }

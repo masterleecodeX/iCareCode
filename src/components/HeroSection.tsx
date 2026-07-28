@@ -11,11 +11,11 @@ export function HeroSection() {
   const [positions, setPositions] = useState([0, 1, 2]);
 
   const handleLeftClick = () => {
-    setPositions(prev => [prev[2], prev[0], prev[1]]);
+    setPositions((prev) => [prev[2], prev[0], prev[1]]);
   };
 
   const handleRightClick = () => {
-    setPositions(prev => [prev[1], prev[2], prev[0]]);
+    setPositions((prev) => [prev[1], prev[2], prev[0]]);
   };
 
   const handleDragEnd = (_event: any, info: any) => {
@@ -29,14 +29,14 @@ export function HeroSection() {
   const getPosition = (imageIndex: number) => positions.indexOf(imageIndex);
 
   return (
-    <div 
+    <div
       className="relative w-full aspect-[68/38] flex items-center justify-center"
-      style={{ perspective: '1200px', transformStyle: 'preserve-3d' }}
+      style={{ perspective: "1200px", transformStyle: "preserve-3d" }}
     >
       <AnimatePresence initial={false}>
         {IMAGES.map((src, index) => {
           const pos = getPosition(index);
-          
+
           let x = "0%";
           let z = 0;
           let rotateY = 0;
@@ -46,9 +46,10 @@ export function HeroSection() {
           let overlayOpacity = 0;
           let blurAmount = "0px";
           let originX = "50%";
-          
+
           let hoverState: any = {};
-          if (pos === 0) { // Left
+          if (pos === 0) {
+            // Left
             x = "-28%";
             z = -120;
             rotateY = 20;
@@ -58,8 +59,15 @@ export function HeroSection() {
             overlayOpacity = 0.5;
             blurAmount = "3px";
             originX = "50%";
-            hoverState = { x: "-30%", z: -100, rotateY: 18, scale: 0.86, opacity: 0.75 };
-          } else if (pos === 1) { // Center
+            hoverState = {
+              x: "-30%",
+              z: -100,
+              rotateY: 18,
+              scale: 0.86,
+              opacity: 0.75,
+            };
+          } else if (pos === 1) {
+            // Center
             x = "0%";
             z = 0;
             rotateY = 0;
@@ -70,7 +78,8 @@ export function HeroSection() {
             blurAmount = "0px";
             originX = "50%";
             hoverState = { scale: 1.02 };
-          } else if (pos === 2) { // Right
+          } else if (pos === 2) {
+            // Right
             x = "28%";
             z = -120;
             rotateY = -20;
@@ -80,11 +89,17 @@ export function HeroSection() {
             overlayOpacity = 0.5;
             blurAmount = "3px";
             originX = "50%";
-            hoverState = { x: "30%", z: -100, rotateY: -18, scale: 0.86, opacity: 0.75 };
+            hoverState = {
+              x: "30%",
+              z: -100,
+              rotateY: -18,
+              scale: 0.86,
+              opacity: 0.75,
+            };
           }
-          
+
           return (
-            <motion.div 
+            <motion.div
               key={index}
               className="absolute top-0 bottom-0 w-full bg-[#F7F5F0] rounded-[16px] md:rounded-[28px] overflow-hidden shadow-2xl cursor-pointer"
               drag={pos === 1 ? "x" : false}
@@ -113,22 +128,22 @@ export function HeroSection() {
                 else if (pos === 2) handleRightClick();
               }}
             >
-              <motion.img 
+              <motion.img
                 src={src}
-                alt={`Hero ${index}`} 
+                alt={`Hero ${index}`}
                 draggable={false}
                 className="absolute inset-0 w-full h-full object-cover"
                 initial={false}
                 animate={{
-                  filter: `blur(${blurAmount})`
+                  filter: `blur(${blurAmount})`,
                 }}
                 transition={{ duration: 0.4 }}
               />
-              <motion.div 
+              <motion.div
                 className="absolute inset-0 bg-black pointer-events-none"
                 initial={false}
                 animate={{
-                  opacity: overlayOpacity
+                  opacity: overlayOpacity,
                 }}
                 transition={{ duration: 0.4 }}
               />
